@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Markezo</title>
+<meta name="description" content="Markezo: ten local shops in one online bazaar. Browse each store, see products and location, and message the shop on WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --surface: #ffffff;
+  --ink: #161615;
+  --muted: #5c5b56;
+  --line: #e4e2dc;
+  --accent: #0f766e;
+  --accent-ink: #ffffff;
+  --radius: 14px;
+}
+[data-theme="dark"] {
+  --bg: #121211;
+  --surface: #1c1c1a;
+  --ink: #f4f3ef;
+  --muted: #a6a49c;
+  --line: #2c2c29;
+  --accent: #2dd4bf;
+  --accent-ink: #062824;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+}
+h1, h2, h3, .logo {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.bar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.bar .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; gap: 12px;
+}
+.logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 1.25rem; color: var(--ink); text-decoration: none;
+}
+.mk {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--accent); display: inline-grid; place-items: center;
+}
+.tools { display: flex; align-items: center; gap: 10px; }
+.ibtn, .cartbtn, .btn, .fab {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 999px; cursor: pointer; font: inherit; font-weight: 500;
+}
+.ibtn { width: 40px; height: 40px; display: inline-grid; place-items: center; }
+.cartbtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; background: var(--accent); color: var(--accent-ink); border-color: transparent;
+}
+.cartbtn b, .fab b {
+  background: rgba(0,0,0,0.18); padding: 1px 7px; border-radius: 999px; font-size: 0.85rem;
+}
+main.wrap { padding-top: 28px; padding-bottom: 72px; }
+.hero { margin-bottom: 24px; }
+.hero h1 { margin: 0 0 8px; font-size: clamp(1.75rem, 4vw, 2.5rem); }
+.hero p { margin: 0; color: var(--muted); }
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+}
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+}
+.card-top { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.shop-tag { font-size: 0.8rem; color: var(--muted); }
+.price { font-weight: 700; }
+.btn { padding: 9px 14px; align-self: flex-start; }
+.btn:hover { border-color: var(--accent); }
+footer {
+  border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: 0.92rem;
+}
+footer b { color: var(--ink); }
+.fab {
+  position: fixed; right: 20px; bottom: 20px; z-index: 30;
+  padding: 12px 18px; background: var(--accent); color: var(--accent-ink);
+  border-color: transparent; box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+}
+.veil {
+  position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,0.45);
+}
+.panel {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 50;
+  width: min(420px, 100vw); background: var(--surface); border-left: 1px solid var(--line);
+  padding: 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
+}
+.panel header { display: flex; align-items: center; justify-content: space-between; }
+.panel header h2 { margin: 0; font-size: 1.25rem; }
+.hint { margin: 0; font-size: 0.9rem; color: var(--muted); }
+.list2 { display: flex; flex-direction: column; gap: 10px; }
+.req-item {
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.wa-link {
+  display: inline-block; margin-top: 8px; text-decoration: none; text-align: center;
+  background: var(--accent); color: var(--accent-ink); padding: 11px 16px;
+  border-radius: 999px; font-weight: 700;
+}
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 60;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 999px;
+  font-size: 0.9rem;
+}
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <a class="logo" href="#home" aria-label="Markezo home"><span class="mk" id="logoIc"></span>Markezo</a>
+  <div class="tools">
+    <button class="ibtn" id="themeBtn" type="button" aria-label="Switch light or dark theme">☀</button>
+    <button class="cartbtn" id="cartBtn" type="button" aria-label="Open request list"><span class="t">Request list</span><b id="cartCount">0</b></button>
+  </div>
+</div></div>
+
+<main class="wrap" id="view"></main>
+
+<footer><div class="wrap"><div><b>Markezo</b><p>Ten local shops, one online bazaar. Each shop confirms its prices when you message it.</p></div></div></footer>
+
+<button class="fab" id="fab" type="button" hidden>View request list <b id="fabCount">0</b></button>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div id="veil" class="veil" hidden></div>
+<aside id="panel" class="panel" hidden aria-label="Request list">
+  <header><h2>Request list</h2><button class="ibtn" id="closeCart" type="button" aria-label="Close">✕</button></header>
+  <p class="hint">Tap Send on WhatsApp to open a chat with the shop. Your request is already typed in the message.</p>
+  <div class="list2" id="cartBody"></div>
+</aside>
+
+<script>
+const SHOPS_AND_ITEMS = [
+  { id: "1", name: "Artisan Sourdough Loaf", shop: "Bazaar Bakery", location: "Main Lane", price: "Rs. 650", phone: "923001234567" },
+  { id: "2", name: "Raw Multani Honey (500g)", shop: "Green Valley Organics", location: "West Gate", price: "Rs. 1,450", phone: "923001234568" },
+  { id: "3", name: "Handwoven Cotton Cushion", shop: "Craft & Loom", location: "Old Market", price: "Rs. 1,800", phone: "923001234569" }
+];
+
+const state = {
+  items: JSON.parse(localStorage.getItem("markezo_req") || "[]"),
+  theme: localStorage.getItem("markezo_theme") || "light"
+};
+
+const view = document.getElementById("view");
+const panel = document.getElementById("panel");
+const veil = document.getElementById("veil");
+const cartBody = document.getElementById("cartBody");
+const cartCount = document.getElementById("cartCount");
+const fab = document.getElementById("fab");
+const fabCount = document.getElementById("fabCount");
+const toast = document.getElementById("toast");
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.hidden = false;
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => { toast.hidden = true; }, 2000);
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute("data-theme", state.theme);
+  document.getElementById("themeBtn").textContent = state.theme === "dark" ? "☾" : "☀";
+  localStorage.setItem("markezo_theme", state.theme);
+}
+
+function renderCatalog() {
+  view.innerHTML = `
+    <section class="hero">
+      <h1>Local shops, one online bazaar</h1>
+      <p>Browse items from neighborhood stores, add them to your request list, and confirm availability on WhatsApp.</p>
+    </section>
+    <section class="grid">
+      ${SHOPS_AND_ITEMS.map(item => `
+        <article class="card">
+          <div class="card-top">
+            <div>
+              <strong>${item.name}</strong>
+              <div class="shop-tag">${item.shop} · ${item.location}</div>
+            </div>
+            <span class="price">${item.price}</span>
+          </div>
+          <button class="btn" type="button" data-add="${item.id}">Add to request list</button>
+        </article>
+      `).join("")}
+    </section>
+  `;
+  view.querySelectorAll("[data-add]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const found = SHOPS_AND_ITEMS.find(x => x.id === btn.dataset.add);
+      if (!found) return;
+      state.items.push(found);
+      syncRequests();
+      showToast(`Added "${found.name}"`);
+    });
+  });
+}
+
+function renderCart() {
+  const n = state.items.length;
+  cartCount.textContent = n;
+  fabCount.textContent = n;
+  fab.hidden = n === 0 || !panel.hidden;
+
+  if (!n) {
+    cartBody.innerHTML = `<p class="hint">Your request list is empty. Add items from any shop to prepare a WhatsApp message.</p>`;
+    return;
+  }
+
+  const lines = state.items.map((x, i) => `${i + 1}. ${x.name} (${x.shop} - ${x.price})`).join("\n");
+  const msg = encodeURIComponent(`Assalam-o-Alaikum, I'd like to check availability and prices for:\n${lines}`);
+  const firstPhone = state.items[0].phone;
+
+  cartBody.innerHTML = `
+    ${state.items.map((x, idx) => `
+      <div class="req-item">
+        <div>
+          <strong>${x.name}</strong>
+          <div class="shop-tag">${x.shop} · ${x.price}</div>
+        </div>
+        <button class="btn" type="button" data-rem="${idx}">Remove</button>
+      </div>
+    `).join("")}
+    <a class="wa-link" href="https://wa.me/${firstPhone}?text=${msg}" target="_blank" rel="noopener">Send on WhatsApp</a>
+  `;
+
+  cartBody.querySelectorAll("[data-rem]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.items.splice(Number(btn.dataset.rem), 1);
+      syncRequests();
+    });
+  });
+}
+
+function syncRequests() {
+  localStorage.setItem("markezo_req", JSON.stringify(state.items));
+  renderCart();
+}
+
+function openPanel() {
+  panel.hidden = false;
+  veil.hidden = false;
+  fab.hidden = true;
+}
+
+function closePanel() {
+  panel.hidden = true;
+  veil.hidden = true;
+  renderCart();
+}
+
+document.getElementById("themeBtn").addEventListener("click", () => {
+  state.theme = state.theme === "dark" ? "light" : "dark";
+  applyTheme();
+});
+document.getElementById("cartBtn").addEventListener("click", openPanel);
+fab.addEventListener("click", openPanel);
+document.getElementById("closeCart").addEventListener("click", closePanel);
+veil.addEventListener("click", closePanel);
+
+applyTheme();
+renderCatalog();
+renderCart();
+</script>
+</body>
+</html>
